@@ -12,7 +12,6 @@ import {
   LogOut,
   LogIn,
   RotateCw,
-  GitBranch,
   Layers,
   Radio,
 } from 'lucide-react';
@@ -115,15 +114,6 @@ export const AppShell: React.FC<AppShellProps> = ({ onOpenSignIn, children }) =>
                 </div>
                 <span className="tracking-tight hidden xs:inline">Commute Planner</span>
               </Link>
-
-              <span className="text-zinc-600 font-mono text-sm">/</span>
-
-              {/* Scope / Environment Pill */}
-              <div className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-900 border border-zinc-800 text-zinc-300">
-                <GitBranch className="w-3 h-3 text-zinc-400" />
-                <span>nyc-transit</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ml-1"></span>
-              </div>
 
               {/* Live GBFS Telemetry Dot */}
               <div

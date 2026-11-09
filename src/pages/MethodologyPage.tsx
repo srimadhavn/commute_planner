@@ -18,16 +18,11 @@ export const MethodologyPage: React.FC = () => {
       {/* Vercel Breadcrumbs Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800/80">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-mono text-zinc-500">
-            <span>commute-planner</span>
-            <span>/</span>
-            <span className="text-zinc-300">methodology</span>
-          </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-100">
             Methodology & Visible Assumptions
           </h1>
-          <p className="text-xs text-zinc-400">
-            Empirical foundations, environmental standards, and economic cost formulas.
+          <p className="text-xs sm:text-sm text-zinc-400">
+            Empirical standards, EPA emission factors, and composite cost formulas.
           </p>
         </div>
 

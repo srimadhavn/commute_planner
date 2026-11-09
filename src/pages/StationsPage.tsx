@@ -39,25 +39,20 @@ export const StationsPage: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      {/* Vercel Breadcrumbs Header */}
+      {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800/80">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-mono text-zinc-500">
-            <span>commute-planner</span>
-            <span>/</span>
-            <span className="text-zinc-300">stations</span>
-          </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-100">
-            Live Citi Bike Stations & Availability Grid
+            Live Stations
           </h1>
-          <p className="text-xs text-zinc-400">
-            Real-time dock capacity, electric fleet distribution, and turn-around metrics across the pilot network.
+          <p className="text-xs sm:text-sm text-zinc-400">
+            Real-time dock and bike availability across the Citi Bike network.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <span className="text-xs font-mono text-zinc-400 bg-zinc-900 border border-zinc-800 px-2.5 py-1 rounded">
-            GBFS Feed v2.3
+            GBFS v2.3
           </span>
         </div>
       </div>
@@ -65,11 +60,10 @@ export const StationsPage: React.FC = () => {
       {/* Network Overview Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <Card className="border-zinc-800 bg-zinc-900/60 p-4">
-          <span className="text-xs font-mono text-zinc-400">Pilot Stations</span>
+          <span className="text-xs font-mono text-zinc-400">Active Stations</span>
           <p className="text-xl sm:text-2xl font-bold font-mono text-zinc-100 mt-1">
-            {SAMPLE_DETAILED_STATIONS.length} Active
+            {SAMPLE_DETAILED_STATIONS.length}
           </p>
-          <span className="text-[11px] font-mono text-emerald-400">100% operational</span>
         </Card>
 
         <Card className="border-zinc-800 bg-zinc-900/60 p-4">
@@ -77,7 +71,6 @@ export const StationsPage: React.FC = () => {
           <p className="text-xl sm:text-2xl font-bold font-mono text-zinc-100 mt-1">
             {totalBikes - totalEbikes}
           </p>
-          <span className="text-[11px] font-mono text-zinc-400">Pedal drive</span>
         </Card>
 
         <Card className="border-zinc-800 bg-zinc-900/60 p-4">
@@ -85,7 +78,6 @@ export const StationsPage: React.FC = () => {
           <p className="text-xl sm:text-2xl font-bold font-mono text-emerald-400 mt-1">
             {totalEbikes}
           </p>
-          <span className="text-[11px] font-mono text-zinc-400">Assist ready</span>
         </Card>
 
         <Card className="border-zinc-800 bg-zinc-900/60 p-4">
@@ -93,7 +85,6 @@ export const StationsPage: React.FC = () => {
           <p className="text-xl sm:text-2xl font-bold font-mono text-zinc-100 mt-1">
             {totalDocks}
           </p>
-          <span className="text-[11px] font-mono text-zinc-400">Return capacity</span>
         </Card>
       </div>
 

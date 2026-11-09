@@ -301,10 +301,6 @@ export const PlanForm: React.FC<PlanFormProps> = ({
               </Button>
             </div>
 
-            <p className="text-xs text-zinc-500">
-              Drives cost comparison against driving. Defaults to NYC urban average ($10).
-            </p>
-
             <div className="flex items-center gap-4 pt-1">
               <Slider
                 min={0}

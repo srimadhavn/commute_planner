@@ -66,16 +66,11 @@ export const ImpactPage: React.FC = () => {
       {/* Vercel Breadcrumbs Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800/80">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-mono text-zinc-500">
-            <span>commute-planner</span>
-            <span>/</span>
-            <span className="text-zinc-300">analytics</span>
-          </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-100">
-            Environmental & Financial Impact Analytics
+            Impact Analytics
           </h1>
-          <p className="text-xs text-zinc-400">
-            Longitudinal emissions reduction, personal cost avoidance, and verified commute history.
+          <p className="text-xs sm:text-sm text-zinc-400">
+            Track cumulative emissions and cost savings over driving.
           </p>
         </div>
 
