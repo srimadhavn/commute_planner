@@ -7,15 +7,18 @@ import { ResultsView } from '../components/results/ResultsView';
 import { AuthProvider } from '../context/AuthContext';
 import { ToastProvider } from '../context/ToastContext';
 import { ThemeProvider } from '../context/ThemeContext';
+import { MemoryRouter } from 'react-router-dom';
 import { SAMPLE_PLAN_RESPONSE } from '../services/sampleData';
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(
-    <ThemeProvider>
-      <AuthProvider>
-        <ToastProvider>{ui}</ToastProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <MemoryRouter>
+      <ThemeProvider>
+        <AuthProvider>
+          <ToastProvider>{ui}</ToastProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </MemoryRouter>
   );
 };
 

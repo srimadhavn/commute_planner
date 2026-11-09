@@ -138,9 +138,9 @@ test.describe('Screenshots Capture Suite', () => {
     await page.waitForTimeout(500);
     await page.screenshot({ path: `screenshots/${prefix}-03-results.png`, fullPage: true });
 
-    // Screen 4: Map & Stations
-    const mapToggleBtn = page.getByRole('button', { name: /map & stations/i });
-    await mapToggleBtn.click();
+    // Screen 4: Live Stations & Map Page
+    await page.goto('/stations');
+    await cleanFixedForCapture();
     await page.waitForTimeout(1000); // allow leaflet tiles to position
     await page.screenshot({ path: `screenshots/${prefix}-04-map.png`, fullPage: true });
 

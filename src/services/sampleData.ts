@@ -288,3 +288,248 @@ export const SAMPLE_SAVED_TRIPS: SavedTripsResponse = {
     },
   ],
 };
+
+export interface SystemTelemetry {
+  gbfs_stations_count: number;
+  active_bikes: number;
+  ebikes_share_percent: number;
+  uptime_percent: number;
+  sync_latency_ms: number;
+  feed_version: string;
+  last_sync_age_sec: number;
+  weekly_carbon_goal_kg: number;
+  weekly_carbon_achieved_kg: number;
+  trees_planted_equivalent: number;
+}
+
+export const SAMPLE_SYSTEM_TELEMETRY: SystemTelemetry = {
+  gbfs_stations_count: 2520,
+  active_bikes: 28410,
+  ebikes_share_percent: 42,
+  uptime_percent: 99.98,
+  sync_latency_ms: 32,
+  feed_version: 'GBFS v2.3',
+  last_sync_age_sec: 18,
+  weekly_carbon_goal_kg: 50.0,
+  weekly_carbon_achieved_kg: 34.2,
+  trees_planted_equivalent: 1.4,
+};
+
+export interface TransitBenchmark {
+  mode: string;
+  avg_speed_kmh: number;
+  co2_per_km_g: number;
+  base_fare: string;
+  reliability_pct: number;
+  sustainability_grade: 'A+' | 'A' | 'B+' | 'C' | 'F';
+}
+
+export const SAMPLE_TRANSIT_BENCHMARKS: TransitBenchmark[] = [
+  {
+    mode: 'Walking',
+    avg_speed_kmh: 4.8,
+    co2_per_km_g: 0,
+    base_fare: '$0.00',
+    reliability_pct: 99.9,
+    sustainability_grade: 'A+',
+  },
+  {
+    mode: 'Citi Bike (Classic)',
+    avg_speed_kmh: 14.5,
+    co2_per_km_g: 0,
+    base_fare: '$4.79 / ride',
+    reliability_pct: 96.5,
+    sustainability_grade: 'A+',
+  },
+  {
+    mode: 'Citi Bike (E-bike)',
+    avg_speed_kmh: 19.2,
+    co2_per_km_g: 12,
+    base_fare: '$0.24 / min',
+    reliability_pct: 94.8,
+    sustainability_grade: 'A',
+  },
+  {
+    mode: 'NYC Subway',
+    avg_speed_kmh: 28.0,
+    co2_per_km_g: 75,
+    base_fare: '$2.90',
+    reliability_pct: 91.2,
+    sustainability_grade: 'A',
+  },
+  {
+    mode: 'MTA Crosstown Bus',
+    avg_speed_kmh: 11.2,
+    co2_per_km_g: 95,
+    base_fare: '$2.90',
+    reliability_pct: 82.4,
+    sustainability_grade: 'B+',
+  },
+  {
+    mode: 'Personal Car / Drive',
+    avg_speed_kmh: 15.0,
+    co2_per_km_g: 250,
+    base_fare: '$10+ parking + gas',
+    reliability_pct: 71.0,
+    sustainability_grade: 'F',
+  },
+];
+
+export interface DetailedStation {
+  station_id: string;
+  name: string;
+  cross_street: string;
+  lat: number;
+  lon: number;
+  capacity: number;
+  bikes_available: number;
+  ebikes_available: number;
+  docks_available: number;
+  is_renting: boolean;
+  status: 'optimal' | 'low_bikes' | 'empty' | 'full';
+  neighborhood: string;
+}
+
+export const SAMPLE_DETAILED_STATIONS: DetailedStation[] = [
+  {
+    station_id: '64f0f28c',
+    name: 'Broadway & W 48 St',
+    cross_street: 'Broadway at 48th St',
+    lat: 40.7601,
+    lon: -73.9848,
+    capacity: 103,
+    bikes_available: 31,
+    ebikes_available: 12,
+    docks_available: 68,
+    is_renting: true,
+    status: 'optimal',
+    neighborhood: 'Times Square / Midtown',
+  },
+  {
+    station_id: '2104286',
+    name: 'W 47 St & 6 Ave',
+    cross_street: 'West 47th St at 6th Ave',
+    lat: 40.7581,
+    lon: -73.9819,
+    capacity: 68,
+    bikes_available: 2,
+    ebikes_available: 1,
+    docks_available: 65,
+    is_renting: true,
+    status: 'low_bikes',
+    neighborhood: 'Rockefeller Center',
+  },
+  {
+    station_id: '3104286',
+    name: '8 Ave & W 45 St',
+    cross_street: '8th Ave at 45th St',
+    lat: 40.7592,
+    lon: -73.9885,
+    capacity: 50,
+    bikes_available: 0,
+    ebikes_available: 0,
+    docks_available: 50,
+    is_renting: true,
+    status: 'empty',
+    neighborhood: 'Hell’s Kitchen',
+  },
+  {
+    station_id: '4104286',
+    name: 'Grand Central / Vanderbilt Ave',
+    cross_street: 'E 42 St & Vanderbilt Ave',
+    lat: 40.7523,
+    lon: -73.9778,
+    capacity: 85,
+    bikes_available: 44,
+    ebikes_available: 19,
+    docks_available: 40,
+    is_renting: true,
+    status: 'optimal',
+    neighborhood: 'Grand Central',
+  },
+  {
+    station_id: '5104286',
+    name: 'Bryant Park / 6 Ave & W 42 St',
+    cross_street: 'Avenue of the Americas at 42nd St',
+    lat: 40.7544,
+    lon: -73.9845,
+    capacity: 72,
+    bikes_available: 28,
+    ebikes_available: 9,
+    docks_available: 43,
+    is_renting: true,
+    status: 'optimal',
+    neighborhood: 'Bryant Park',
+  },
+  {
+    station_id: '6104286',
+    name: 'Union Square East & E 15 St',
+    cross_street: 'Union Square East at 15th St',
+    lat: 40.7358,
+    lon: -73.9898,
+    capacity: 60,
+    bikes_available: 37,
+    ebikes_available: 14,
+    docks_available: 22,
+    is_renting: true,
+    status: 'optimal',
+    neighborhood: 'Union Square',
+  },
+  {
+    station_id: '7104286',
+    name: 'Washington Square Park S & Sullivan St',
+    cross_street: 'Washington Square South at Sullivan',
+    lat: 40.7301,
+    lon: -73.9992,
+    capacity: 45,
+    bikes_available: 18,
+    ebikes_available: 6,
+    docks_available: 27,
+    is_renting: true,
+    status: 'optimal',
+    neighborhood: 'Greenwich Village',
+  },
+  {
+    station_id: '8104286',
+    name: 'Old Fulton St & Water St (DUMBO)',
+    cross_street: 'Old Fulton St at Water St',
+    lat: 40.7028,
+    lon: -73.9938,
+    capacity: 55,
+    bikes_available: 22,
+    ebikes_available: 8,
+    docks_available: 32,
+    is_renting: true,
+    status: 'optimal',
+    neighborhood: 'DUMBO, Brooklyn',
+  },
+  {
+    station_id: '9104286',
+    name: 'Bedford Ave & N 7 St',
+    cross_street: 'Bedford Ave at North 7th St',
+    lat: 40.7183,
+    lon: -73.9575,
+    capacity: 48,
+    bikes_available: 15,
+    ebikes_available: 5,
+    docks_available: 32,
+    is_renting: true,
+    status: 'optimal',
+    neighborhood: 'Williamsburg, Brooklyn',
+  },
+  {
+    station_id: '10104286',
+    name: 'Central Park South & 6 Ave',
+    cross_street: '59th St at 6th Ave',
+    lat: 40.7659,
+    lon: -73.9763,
+    capacity: 65,
+    bikes_available: 52,
+    ebikes_available: 20,
+    docks_available: 12,
+    is_renting: true,
+    status: 'optimal',
+    neighborhood: 'Central Park South',
+  },
+];
+

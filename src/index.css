@@ -98,3 +98,10 @@
   filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(110%) saturate(30%);
 }
 
+/* Vercel-style subtle dot grid background pattern */
+.bg-dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+
