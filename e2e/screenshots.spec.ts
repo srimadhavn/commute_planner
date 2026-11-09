@@ -103,8 +103,20 @@ test.describe('Screenshots Capture Suite', () => {
     const isMobile = testInfo.project.name.includes('mobile');
     const prefix = isMobile ? 'mobile' : 'desktop';
 
+    const cleanFixedForCapture = async () => {
+      if (isMobile) {
+        await page.addStyleTag({
+          content: `
+            nav.fixed { position: static !important; }
+            header.sticky { position: static !important; }
+          `,
+        });
+      }
+    };
+
     // Screen 1: Plan Screen
     await page.goto('/');
+    await cleanFixedForCapture();
     await page.waitForTimeout(500);
     await page.screenshot({ path: `screenshots/${prefix}-01-plan.png`, fullPage: true });
 
@@ -159,7 +171,9 @@ test.describe('Screenshots Capture Suite', () => {
     });
     // Trigger health re-query or refresh
     await page.goto('/');
-    await page.waitForTimeout(500);
+    await cleanFixedForCapture();
+    await page.waitForSelector('[role="alert"]', { timeout: 5000 }).catch(() => {});
+    await page.waitForTimeout(300);
     await page.screenshot({ path: `screenshots/${prefix}-07-stale-banner.png`, fullPage: true });
   });
 });

@@ -68,18 +68,18 @@ export const SavingsChart: React.FC<SavingsChartProps> = ({ trips }) => {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between text-xs">
-        <h4 className="font-bold text-slate-800 dark:text-slate-200">
+        <h4 className="font-semibold text-zinc-200">
           Cumulative CO₂ Emissions Avoided Over Time
         </h4>
-        <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+        <span className="font-mono text-zinc-300 tabular-nums text-xs">
           Total: {formatCo2(runningTotal)}
         </span>
       </div>
 
-      <div className="relative w-full overflow-hidden bg-slate-50 dark:bg-slate-800/40 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+      <div className="relative w-full overflow-hidden bg-zinc-950 p-3 rounded-lg border border-zinc-800">
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          className="w-full h-auto text-emerald-600 focus:outline-none"
+          className="w-full h-auto text-zinc-100 focus:outline-none"
           role="img"
           aria-label={`Cumulative CO2 saved line chart showing progression up to ${formatCo2(runningTotal)}`}
         >
@@ -96,15 +96,15 @@ export const SavingsChart: React.FC<SavingsChartProps> = ({ trips }) => {
                   y1={yPos}
                   x2={width - padding.right}
                   y2={yPos}
-                  stroke="currentColor"
-                  strokeOpacity="0.1"
+                  stroke="#27272a"
+                  strokeWidth="1"
                   strokeDasharray="4 4"
                 />
                 <text
                   x={padding.left - 8}
                   y={yPos + 3}
                   textAnchor="end"
-                  className="text-[10px] fill-slate-400"
+                  className="text-[10px] fill-zinc-500 font-mono tabular-nums"
                 >
                   {formatCo2(val)}
                 </text>
@@ -115,8 +115,8 @@ export const SavingsChart: React.FC<SavingsChartProps> = ({ trips }) => {
           {/* Area Gradient */}
           <defs>
             <linearGradient id="co2AreaGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#10b981" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="#10b981" stopOpacity="0.02" />
+              <stop offset="0%" stopColor="#fafafa" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#fafafa" stopOpacity="0.0" />
             </linearGradient>
           </defs>
 
@@ -127,8 +127,8 @@ export const SavingsChart: React.FC<SavingsChartProps> = ({ trips }) => {
           <path
             d={linePath}
             fill="none"
-            stroke="#10b981"
-            strokeWidth="3"
+            stroke="#fafafa"
+            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
@@ -139,9 +139,9 @@ export const SavingsChart: React.FC<SavingsChartProps> = ({ trips }) => {
               <circle
                 cx={pt.x}
                 cy={pt.y}
-                r="4.5"
-                className="fill-white dark:fill-slate-900 stroke-emerald-600 hover:scale-125 transition-transform cursor-pointer"
-                strokeWidth="2.5"
+                r="4"
+                className="fill-zinc-950 stroke-zinc-100 hover:scale-125 transition-transform cursor-pointer"
+                strokeWidth="2"
                 tabIndex={0}
                 onMouseEnter={() => setHoveredPoint(pt)}
                 onFocus={() => setHoveredPoint(pt)}
@@ -153,7 +153,7 @@ export const SavingsChart: React.FC<SavingsChartProps> = ({ trips }) => {
                   x={pt.x}
                   y={height - 10}
                   textAnchor="middle"
-                  className="text-[10px] fill-slate-500 font-medium"
+                  className="text-[10px] fill-zinc-500 font-mono"
                 >
                   {pt.date}
                 </text>
@@ -165,17 +165,17 @@ export const SavingsChart: React.FC<SavingsChartProps> = ({ trips }) => {
         {/* Floating Tooltip */}
         {hoveredPoint && (
           <div
-            className="absolute z-20 pointer-events-none p-2 rounded-lg bg-slate-900 text-white text-xs shadow-lg transform -translate-x-1/2 -translate-y-full"
+            className="absolute z-20 pointer-events-none p-2 rounded-md bg-zinc-900 border border-zinc-700 text-zinc-100 text-xs shadow-xl font-mono tabular-nums transform -translate-x-1/2 -translate-y-full"
             style={{
               left: `${(hoveredPoint.x / width) * 100}%`,
               top: `${(hoveredPoint.y / height) * 100}%`,
             }}
           >
-            <span className="font-bold">{hoveredPoint.date}</span>
-            <div className="text-emerald-300">
+            <span className="font-semibold">{hoveredPoint.date}</span>
+            <div className="text-zinc-300">
               +{formatCo2(hoveredPoint.co2)} saved
             </div>
-            <div className="text-[10px] text-slate-300">
+            <div className="text-[10px] text-zinc-500">
               Total: {formatCo2(hoveredPoint.cumulative)}
             </div>
           </div>

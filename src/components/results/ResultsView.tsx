@@ -8,6 +8,9 @@ import { TripMap } from '../map/TripMap';
 import { useToast } from '../../context/ToastContext';
 import { saveTrip } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { Card, CardContent } from '../ui/card';
+import { Button } from '../ui/button';
+import { cn } from '../../lib/utils';
 
 interface ResultsViewProps {
   planData: PlanTripResponse;
@@ -93,45 +96,49 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
   };
 
   return (
-    <div className="space-y-6 animate-fade-in" aria-live="polite">
-      {/* Top Headline Banner */}
-      <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-white/20 text-white tracking-wide uppercase">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-200" />
-              Smart Commute Match
-            </span>
-            <h2 className="text-lg sm:text-xl md:text-2xl font-extrabold tracking-tight">
-              {headline}
-            </h2>
-            <p className="text-xs sm:text-sm text-emerald-100">
-              Between {planData.origin.label} and {planData.destination.label} ({planData.trip_distance_km} km)
-            </p>
-          </div>
+    <div className="space-y-6" aria-live="polite">
+      {/* Top Executive Headline Card */}
+      <Card className="border-zinc-800 bg-zinc-900/90 shadow-md">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider text-zinc-400">
+                <Sparkles className="w-3.5 h-3.5 text-zinc-300" />
+                Smart Commute Match
+              </span>
+              <h2 className="text-base sm:text-lg md:text-xl font-bold tracking-tight text-zinc-100">
+                {headline}
+              </h2>
+              <p className="text-xs text-zinc-400 font-mono tabular-nums">
+                Between {planData.origin.label} and {planData.destination.label} ({planData.trip_distance_km} km)
+              </p>
+            </div>
 
-          <button
-            type="button"
-            onClick={onReset}
-            className="self-start sm:self-center inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-emerald-900 hover:bg-emerald-50 transition-colors shadow-sm focus-visible:ring-2 focus-visible:ring-white min-h-touch"
-            aria-label="Edit trip locations and options"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Modify Plan</span>
-          </button>
-        </div>
-      </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onReset}
+              className="self-start sm:self-center h-8 text-xs border-zinc-700 bg-zinc-950 hover:bg-zinc-800 text-zinc-200"
+              aria-label="Edit trip locations and options"
+            >
+              <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
+              <span>Modify Plan</span>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Sorting Chips & View Toggle Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        {/* Chips for Client-Side Re-sorting */}
+        {/* Chips for Client-Side Re-sorting using shadcn Button */}
         <div
-          className="flex flex-wrap items-center gap-2"
+          className="flex flex-wrap items-center gap-1.5"
           role="radiogroup"
           aria-label="Re-sort commute options"
         >
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mr-1 hidden sm:inline">
-            Rank By:
+          <span className="text-xs uppercase tracking-wider text-zinc-500 mr-1 hidden sm:inline font-mono">
+            Rank:
           </span>
 
           {[
@@ -140,57 +147,62 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
             { id: 'cheapest', label: 'Cheapest', icon: DollarSign },
             { id: 'greenest', label: 'Greenest', icon: Leaf },
           ].map(({ id, label, icon: Icon }) => (
-            <button
+            <Button
               key={id}
               type="button"
               role="radio"
+              variant={activeSort === id ? 'secondary' : 'outline'}
+              size="sm"
               aria-checked={activeSort === id}
               onClick={() => setActiveSort(id as SortPreset)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all min-h-touch ${
+              className={cn(
+                'h-8 text-xs border-zinc-800 font-medium',
                 activeSort === id
-                  ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 shadow-sm'
-                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
-              } focus-visible:ring-2 focus-visible:ring-primary-500`}
+                  ? 'bg-zinc-100 text-zinc-950 hover:bg-zinc-200 font-semibold border-zinc-300'
+                  : 'bg-zinc-950 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900'
+              )}
             >
-              <Icon className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+              <Icon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
               <span>{label}</span>
-            </button>
+            </Button>
           ))}
         </div>
 
-        {/* View Switcher: List vs Map */}
+        {/* View Switcher: List vs Map using shadcn Button Group */}
         <div
-          className="inline-flex self-start sm:self-auto rounded-xl bg-slate-100 dark:bg-slate-800 p-1 border border-slate-200 dark:border-slate-700"
+          className="inline-flex self-start sm:self-auto rounded-lg bg-zinc-950 p-1 border border-zinc-800"
           role="group"
           aria-label="Toggle results view mode"
         >
-          <button
+          <Button
             type="button"
+            variant={activeView === 'list' ? 'secondary' : 'ghost'}
+            size="sm"
             onClick={() => setActiveView('list')}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all min-h-touch ${
-              activeView === 'list'
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-xs'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-            } focus-visible:ring-2 focus-visible:ring-primary-500`}
+            className={cn(
+              'h-7 px-2.5 text-xs font-medium',
+              activeView === 'list' ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:text-zinc-100'
+            )}
             aria-pressed={activeView === 'list'}
           >
-            <List className="w-4 h-4" />
+            <List className="w-3.5 h-3.5 mr-1" />
             <span>Option Cards</span>
-          </button>
+          </Button>
 
-          <button
+          <Button
             type="button"
+            variant={activeView === 'map' ? 'secondary' : 'ghost'}
+            size="sm"
             onClick={() => setActiveView('map')}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all min-h-touch ${
-              activeView === 'map'
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-xs'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-            } focus-visible:ring-2 focus-visible:ring-primary-500`}
+            className={cn(
+              'h-7 px-2.5 text-xs font-medium',
+              activeView === 'map' ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:text-zinc-100'
+            )}
             aria-pressed={activeView === 'map'}
           >
-            <Map className="w-4 h-4" />
+            <Map className="w-3.5 h-3.5 mr-1" />
             <span>Map & Stations</span>
-          </button>
+          </Button>
         </div>
       </div>
 

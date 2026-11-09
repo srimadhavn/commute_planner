@@ -13,6 +13,7 @@ import { planTrip, getTrips, ApiError } from './services/api';
 import { PlanTripRequest, PlanTripResponse, SavedTripsResponse } from './types/api';
 import { SAMPLE_PLAN_RESPONSE, SAMPLE_SAVED_TRIPS } from './services/sampleData';
 import { AlertCircle, RotateCw } from 'lucide-react';
+import { Button } from './components/ui/button';
 
 export const App: React.FC = () => {
   const {
@@ -71,8 +72,7 @@ export const App: React.FC = () => {
   >({
     mutationFn: async (params) => {
       if (isDemoMode) {
-        // Return realistic contract-accurate sample data with resolved labels
-        await new Promise((res) => setTimeout(res, 500)); // simulated short network hop
+        await new Promise((res) => setTimeout(res, 500));
         return {
           ...SAMPLE_PLAN_RESPONSE,
           origin: {
@@ -164,10 +164,10 @@ export const App: React.FC = () => {
           {!planResult && (
             <div className="max-w-2xl mx-auto">
               <div className="text-center mb-6">
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-100 tracking-tight">
                   Smarter, Greener Commute Comparison
                 </h1>
-                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                <p className="mt-2 text-xs sm:text-sm text-zinc-400">
                   Side-by-side time, out-of-pocket costs, and CO₂ emissions versus driving.
                 </p>
               </div>
@@ -192,21 +192,22 @@ export const App: React.FC = () => {
           {planTripMutation.isError && (
             <div
               role="alert"
-              className="max-w-2xl mx-auto p-4 rounded-xl bg-rose-50 dark:bg-rose-950/70 border border-rose-300 dark:border-rose-800 text-rose-800 dark:text-rose-200 flex items-center justify-between gap-3 text-sm"
+              className="max-w-2xl mx-auto p-4 rounded-xl bg-zinc-900 border border-rose-900/60 text-rose-200 flex items-center justify-between gap-3 text-xs sm:text-sm"
             >
               <div className="flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
+                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
                 <span>{planTripMutation.error?.message || 'Could not plan trip.'}</span>
               </div>
               {lastPlannedParams && (
-                <button
-                  type="button"
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => planTripMutation.mutate(lastPlannedParams)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-rose-600 text-white hover:bg-rose-700 min-h-touch"
+                  className="h-7 text-xs border-zinc-700 bg-zinc-950 hover:bg-zinc-800 text-zinc-200"
                 >
-                  <RotateCw className="w-3.5 h-3.5" />
+                  <RotateCw className="w-3 h-3 mr-1" />
                   <span>Retry</span>
-                </button>
+                </Button>
               )}
             </div>
           )}

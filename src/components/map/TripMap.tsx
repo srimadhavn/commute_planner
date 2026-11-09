@@ -3,6 +3,7 @@ import L from 'leaflet';
 import { ResolvedLocation, Station, TripOption } from '../../types/api';
 import { getStations } from '../../services/api';
 import { MapPin, Info } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 
 interface TripMapProps {
   origin: ResolvedLocation;
@@ -62,10 +63,11 @@ export const TripMap: React.FC<TripMapProps> = ({ origin, destination }) => {
     });
     mapInstanceRef.current = map;
 
-    // OpenStreetMap Tiles with required attribution
+    // OpenStreetMap Tiles with matte dark styling and attribution
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
+      className: 'map-tiles-dark',
       maxZoom: 19,
     }).addTo(map);
 
@@ -78,13 +80,13 @@ export const TripMap: React.FC<TripMapProps> = ({ origin, destination }) => {
     const originIcon = L.divIcon({
       className: 'custom-map-marker',
       html: `
-        <div style="background-color: #059669; color: white; padding: 4px 8px; border-radius: 9999px; font-weight: bold; font-size: 11px; display: flex; align-items: center; gap: 4px; border: 2px solid white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);">
-          <span>A</span>
-          <span>Start</span>
+        <div style="background-color: #18181b; color: #fafafa; padding: 3px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; display: flex; align-items: center; gap: 4px; border: 1px solid #3f3f46; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5);">
+          <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #10b981;"></span>
+          <span>Start (A)</span>
         </div>
       `,
-      iconSize: [60, 26],
-      iconAnchor: [30, 13],
+      iconSize: [66, 24],
+      iconAnchor: [33, 12],
     });
 
     const originMarker = L.marker([originLat, originLon], {
@@ -97,13 +99,13 @@ export const TripMap: React.FC<TripMapProps> = ({ origin, destination }) => {
     const destIcon = L.divIcon({
       className: 'custom-map-marker',
       html: `
-        <div style="background-color: #e11d48; color: white; padding: 4px 8px; border-radius: 9999px; font-weight: bold; font-size: 11px; display: flex; align-items: center; gap: 4px; border: 2px solid white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);">
-          <span>B</span>
-          <span>End</span>
+        <div style="background-color: #18181b; color: #fafafa; padding: 3px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; display: flex; align-items: center; gap: 4px; border: 1px solid #3f3f46; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5);">
+          <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #f43f5e;"></span>
+          <span>End (B)</span>
         </div>
       `,
-      iconSize: [60, 26],
-      iconAnchor: [30, 13],
+      iconSize: [66, 24],
+      iconAnchor: [33, 12],
     });
 
     const destMarker = L.marker([destLat, destLon], {
@@ -119,23 +121,23 @@ export const TripMap: React.FC<TripMapProps> = ({ origin, destination }) => {
         [destLat, destLon],
       ],
       {
-        color: '#64748b',
-        weight: 3,
-        dashArray: '6, 8',
-        opacity: 0.8,
+        color: '#71717a',
+        weight: 2,
+        dashArray: '5, 8',
+        opacity: 0.9,
       }
     ).addTo(map);
     guideLine.bindPopup('<strong>Approximate direct guide line</strong><br/>(Turn-by-turn route geometry is not provided by the API)');
 
-    // Add stations to map with text labels and color coding (never color alone)
+    // Add stations to map with text labels and minimal dot indicator (never color alone)
     stations.forEach((st) => {
       bounds.extend([st.lat, st.lon]);
 
       const isLow = st.bikes_available <= 3;
       const isEmpty = st.bikes_available === 0;
-      const bgColor = isEmpty ? '#e11d48' : isLow ? '#d97706' : '#0d9488';
+      const dotColor = isEmpty ? '#f43f5e' : isLow ? '#f59e0b' : '#10b981';
       const textLabel = isEmpty
-        ? '0 bikes (empty)'
+        ? '0 bikes'
         : isLow
         ? `${st.bikes_available} low`
         : `${st.bikes_available} bikes`;
@@ -143,23 +145,23 @@ export const TripMap: React.FC<TripMapProps> = ({ origin, destination }) => {
       const stationIcon = L.divIcon({
         className: 'custom-station-marker',
         html: `
-          <div style="background-color: ${bgColor}; color: white; padding: 3px 6px; border-radius: 6px; font-size: 10px; font-weight: 700; white-space: nowrap; border: 1.5px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 3px;">
-            <span>🚲</span>
+          <div style="background-color: #18181b; color: #e4e4e7; padding: 3px 6px; border-radius: 6px; font-size: 10px; font-weight: 600; white-space: nowrap; border: 1px solid #3f3f46; box-shadow: 0 2px 4px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 4px;">
+            <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: ${dotColor};"></span>
             <span>${textLabel}</span>
           </div>
         `,
-        iconSize: [85, 22],
-        iconAnchor: [42, 11],
+        iconSize: [75, 22],
+        iconAnchor: [37, 11],
       });
 
       const stationMarker = L.marker([st.lat, st.lon], { icon: stationIcon }).addTo(map);
       stationMarker.bindPopup(`
-        <div style="font-family: inherit; font-size: 12px;">
+        <div style="font-family: inherit; font-size: 12px; color: #18181b;">
           <h4 style="margin: 0 0 4px 0; font-weight: bold;">${st.name}</h4>
           <p style="margin: 2px 0;"><strong>Bikes available:</strong> ${st.bikes_available}</p>
           <p style="margin: 2px 0;"><strong>E-bikes available:</strong> ${st.ebikes_available}</p>
           <p style="margin: 2px 0;"><strong>Open docks:</strong> ${st.docks_available} / ${st.capacity}</p>
-          <p style="margin: 2px 0; font-size: 10px; color: #64748b;">Renting: ${st.is_renting ? 'Active' : 'Closed'}</p>
+          <p style="margin: 2px 0; font-size: 10px; color: #52525b;">Renting: ${st.is_renting ? 'Active' : 'Closed'}</p>
         </div>
       `);
     });
@@ -173,38 +175,38 @@ export const TripMap: React.FC<TripMapProps> = ({ origin, destination }) => {
   }, [originLat, originLon, destLat, destLon, origin.label, destination.label, stations]);
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+    <Card className="border-zinc-800 bg-zinc-900/90 shadow-sm overflow-hidden">
       {/* Map Header / Legend */}
-      <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <CardHeader className="p-4 border-b border-zinc-800 flex flex-wrap flex-row items-center justify-between gap-3 text-xs">
         <div>
-          <h3 className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-primary-600" />
+          <CardTitle className="text-sm font-semibold flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-zinc-300" />
             <span>Interactive Map & Live Stations</span>
-          </h3>
-          <p className="text-slate-500 dark:text-slate-400 mt-0.5">
+          </CardTitle>
+          <p className="text-zinc-500 mt-0.5 text-xs">
             Dashed line represents approximate corridor. Turn-by-turn geometries are omitted by contract.
           </p>
         </div>
 
         {/* Legend */}
-        <div className="flex flex-wrap items-center gap-2.5" aria-label="Map legend">
-          <span className="inline-flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+        <div className="flex flex-wrap items-center gap-3 text-[11px] text-zinc-400" aria-label="Map legend">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
             <span>Origin (A)</span>
           </span>
-          <span className="inline-flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-600"></span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-rose-500"></span>
             <span>Destination (B)</span>
           </span>
-          <span className="inline-flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-teal-600"></span>
-            <span>Live Citi Bikes</span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>Live Bikes</span>
           </span>
         </div>
-      </div>
+      </CardHeader>
 
       {/* Map Container */}
-      <div className="relative">
+      <CardContent className="p-0 relative">
         <div
           ref={mapContainerRef}
           className="w-full h-[450px] sm:h-[520px] z-10"
@@ -213,11 +215,11 @@ export const TripMap: React.FC<TripMapProps> = ({ origin, destination }) => {
         />
 
         {/* Guide Notice Overlay */}
-        <div className="absolute bottom-2 left-2 z-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-[11px] text-slate-700 dark:text-slate-300 shadow-sm flex items-center gap-1.5">
-          <Info className="w-3.5 h-3.5 text-primary-600 shrink-0" />
+        <div className="absolute bottom-2 left-2 z-20 bg-zinc-950/90 backdrop-blur px-3 py-1.5 rounded-md border border-zinc-800 text-[11px] text-zinc-400 shadow-sm flex items-center gap-1.5 font-mono">
+          <Info className="w-3.5 h-3.5 text-zinc-300 shrink-0" />
           <span>Approximate straight line; routing geometry not returned by API.</span>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };

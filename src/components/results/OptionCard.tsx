@@ -24,8 +24,12 @@ import {
   formatTimeDiff,
 } from '../../utils/formatters';
 import { Badge } from '../common/Badge';
+import { Card } from '../ui/card';
+import { Button } from '../ui/button';
+import { Progress } from '../ui/progress';
 import { WhyThisRankSection } from './WhyThisRankSection';
 import { LegTimeline } from './LegTimeline';
+import { cn } from '../../lib/utils';
 
 interface OptionCardProps {
   option: TripOption;
@@ -55,14 +59,14 @@ export const OptionCard: React.FC<OptionCardProps> = ({
 
   const getPrimaryIcon = (name: string) => {
     const n = name.toLowerCase();
-    if (n.includes('bike')) return <Bike className="w-5 h-5 text-teal-600 dark:text-teal-400" />;
+    if (n.includes('bike')) return <Bike className="w-4 h-4 text-emerald-400" />;
     if (n.includes('subway') || n.includes('train') || n.includes('rail')) {
-      return <Train className="w-5 h-5 text-blue-600 dark:text-blue-400" />;
+      return <Train className="w-4 h-4 text-zinc-200" />;
     }
-    if (n.includes('bus')) return <Bus className="w-5 h-5 text-amber-600 dark:text-amber-400" />;
-    if (n.includes('walk')) return <Footprints className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />;
-    if (n.includes('drive') || n.includes('car')) return <Car className="w-5 h-5 text-slate-600 dark:text-slate-400" />;
-    return <Train className="w-5 h-5 text-primary-600" />;
+    if (n.includes('bus')) return <Bus className="w-4 h-4 text-zinc-300" />;
+    if (n.includes('walk')) return <Footprints className="w-4 h-4 text-zinc-300" />;
+    if (n.includes('drive') || n.includes('car')) return <Car className="w-4 h-4 text-zinc-400" />;
+    return <Train className="w-4 h-4 text-zinc-200" />;
   };
 
   const handleSave = async (e: React.MouseEvent) => {
@@ -78,70 +82,67 @@ export const OptionCard: React.FC<OptionCardProps> = ({
   };
 
   return (
-    <article
-      className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
-        rankIndex === 0
-          ? 'bg-white dark:bg-slate-900 border-primary-400 dark:border-primary-600 shadow-md ring-1 ring-primary-500/20'
-          : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-sm'
-      }`}
+    <Card
+      as="article"
+      role="article"
+      className={cn(
+        'transition-all duration-200 border-zinc-800 bg-zinc-900/80',
+        rankIndex === 0 && 'border-zinc-700 shadow-md ring-1 ring-zinc-700/50'
+      )}
       aria-labelledby={`option-title-${option.id}`}
     >
       {/* Top Card Header */}
       <div className="p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3">
-            <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 mt-0.5">
+            <div className="p-2.5 rounded-lg bg-zinc-950 border border-zinc-800 mt-0.5 text-zinc-200 shadow-xs">
               {getPrimaryIcon(option.name)}
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <h3
                   id={`option-title-${option.id}`}
-                  className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100"
+                  className="text-base sm:text-lg font-bold text-zinc-100 tracking-tight"
                 >
                   {option.name}
                 </h3>
 
                 {/* Quality Badge */}
-                {option.data_quality === 'estimated' && (
-                  <Badge variant="estimated" />
-                )}
-                {option.data_quality === 'routed' && (
-                  <Badge variant="routed" />
-                )}
+                {option.data_quality === 'estimated' && <Badge variant="estimated" />}
+                {option.data_quality === 'routed' && <Badge variant="routed" />}
               </div>
 
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-zinc-400 mt-0.5 font-mono tabular-nums">
                 {formatDistance(option.total_distance_km)} • {option.legs.length} segment
                 {option.legs.length > 1 ? 's' : ''}
               </p>
             </div>
           </div>
 
-          {/* Save Trip Button */}
-          <button
-            type="button"
+          {/* Save Trip Button using shadcn Button */}
+          <Button
+            variant="outline"
+            size="sm"
             onClick={handleSave}
             disabled={isSaved || justSaved || isSaving}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors min-h-touch ${
-              isSaved || justSaved
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800'
-                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
-            } focus-visible:ring-2 focus-visible:ring-primary-500`}
+            className={cn(
+              'h-8 text-xs border-zinc-800 font-medium',
+              (isSaved || justSaved) && 'border-zinc-700 text-zinc-200 bg-zinc-800'
+            )}
             aria-label={isSaved || justSaved ? 'Trip saved' : `Save ${option.name} trip`}
           >
             {isSaved || justSaved ? (
               <>
-                <Check className="w-3.5 h-3.5 text-emerald-600" />
+                <Check className="w-3.5 h-3.5 mr-1 text-emerald-400" />
                 <span>Saved</span>
               </>
             ) : (
               <>
-                <Bookmark className="w-3.5 h-3.5" />
+                <Bookmark className="w-3.5 h-3.5 mr-1 text-zinc-400" />
                 <span>{isSaving ? 'Saving...' : 'Save'}</span>
               </>
             )}
-          </button>
+          </Button>
         </div>
 
         {/* Tags Row */}
@@ -155,12 +156,12 @@ export const OptionCard: React.FC<OptionCardProps> = ({
 
         {/* Savings vs Driving Callout */}
         {option.vs_car && (option.vs_car.cost_savings > 0 || option.vs_car.co2_savings_g > 0) && (
-          <div className="mt-3.5 p-2.5 rounded-xl bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex items-center justify-between text-xs text-emerald-900 dark:text-emerald-200">
-            <div className="flex items-center gap-2 font-medium">
-              <TrendingDown className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <div className="mt-3 p-2.5 rounded-md bg-zinc-950 border border-zinc-800 flex items-center justify-between text-xs text-zinc-300">
+            <div className="flex items-center gap-2 font-mono text-[11px] tabular-nums">
+              <TrendingDown className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
               <span>
                 Vs Driving:{' '}
-                <strong>
+                <strong className="text-zinc-100">
                   Saves {formatCurrency(option.vs_car.cost_savings)} & {formatCo2(option.vs_car.co2_savings_g)}
                 </strong>{' '}
                 ({formatTimeDiff(option.vs_car.time_diff_min)})
@@ -169,112 +170,89 @@ export const OptionCard: React.FC<OptionCardProps> = ({
           </div>
         )}
 
-        {/* 3 Core Metric Bars (Comparable Side-by-Side) */}
-        <div className="grid grid-cols-3 gap-2.5 sm:gap-4 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+        {/* 3 Core Metric Bars (Clean high-contrast with tabular numbers) */}
+        <div className="grid grid-cols-3 gap-2.5 sm:gap-4 mt-4 pt-4 border-t border-zinc-800">
           {/* Time Metric */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs">
-              <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400 font-semibold">
-                <Clock className="w-3.5 h-3.5 text-amber-500" />
+              <span className="flex items-center gap-1 text-zinc-400 font-medium">
+                <Clock className="w-3 h-3 text-zinc-400" />
                 <span>Time</span>
               </span>
-              <span className="font-extrabold text-slate-900 dark:text-slate-100">
+              <span className="font-bold text-zinc-100 font-mono tabular-nums">
                 {formatTime(option.total_time_min)}
               </span>
             </div>
-            {/* Visual comparative bar */}
-            <div
-              className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden"
-              role="progressbar"
-              aria-valuenow={option.total_time_min}
-              aria-valuemin={0}
-              aria-valuemax={extremes.maxTime}
+            <Progress
+              value={timePercent}
+              indicatorClassName="bg-zinc-300"
               aria-label={`Time: ${formatTime(option.total_time_min)}`}
-            >
-              <div
-                className="bg-amber-500 h-full rounded-full transition-all duration-500"
-                style={{ width: `${Math.max(timePercent, 6)}%` }}
-              />
-            </div>
+            />
           </div>
 
           {/* Cost Metric */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs">
-              <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400 font-semibold">
-                <DollarSign className="w-3.5 h-3.5 text-blue-500" />
+              <span className="flex items-center gap-1 text-zinc-400 font-medium">
+                <DollarSign className="w-3 h-3 text-zinc-400" />
                 <span>Cost</span>
               </span>
-              <span className="font-extrabold text-slate-900 dark:text-slate-100">
+              <span className="font-bold text-zinc-100 font-mono tabular-nums">
                 {formatCurrency(option.total_cost)}
               </span>
             </div>
-            {/* Visual comparative bar */}
-            <div
-              className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden"
-              role="progressbar"
-              aria-valuenow={option.total_cost}
-              aria-valuemin={0}
-              aria-valuemax={extremes.maxCost}
+            <Progress
+              value={costPercent}
+              indicatorClassName="bg-zinc-300"
               aria-label={`Cost: ${formatCurrency(option.total_cost)}`}
-            >
-              <div
-                className="bg-blue-500 h-full rounded-full transition-all duration-500"
-                style={{ width: `${Math.max(costPercent, 6)}%` }}
-              />
-            </div>
+            />
           </div>
 
           {/* CO2 Metric */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs">
-              <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400 font-semibold">
-                <Leaf className="w-3.5 h-3.5 text-emerald-500" />
+              <span className="flex items-center gap-1 text-zinc-400 font-medium">
+                <Leaf className="w-3 h-3 text-emerald-400" />
                 <span>CO₂</span>
               </span>
-              <span className="font-extrabold text-slate-900 dark:text-slate-100">
+              <span className="font-bold text-zinc-100 font-mono tabular-nums">
                 {formatCo2(option.total_co2_g)}
               </span>
             </div>
-            {/* Visual comparative bar */}
-            <div
-              className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden"
-              role="progressbar"
-              aria-valuenow={option.total_co2_g}
-              aria-valuemin={0}
-              aria-valuemax={extremes.maxCo2}
+            <Progress
+              value={co2Percent}
+              indicatorClassName={option.total_co2_g === 0 ? 'bg-emerald-400' : 'bg-zinc-400'}
               aria-label={`Carbon emissions: ${formatCo2(option.total_co2_g)}`}
-            >
-              <div
-                className="bg-emerald-500 h-full rounded-full transition-all duration-500"
-                style={{ width: `${Math.max(co2Percent, 6)}%` }}
-              />
-            </div>
+            />
           </div>
         </div>
       </div>
 
       {/* Expandable Footer Controls */}
-      <div className="px-4 sm:px-5 py-2.5 bg-slate-50/70 dark:bg-slate-800/40 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-        <button
+      <div className="px-4 sm:px-5 py-2.5 bg-zinc-950/60 border-t border-zinc-800 flex items-center justify-between text-xs">
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => setShowWhyRank(!showWhyRank)}
-          className="inline-flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 font-medium focus-visible:ring-2 focus-visible:ring-primary-500 rounded p-1 min-h-touch"
+          className="h-7 px-2 text-xs text-zinc-400 hover:text-zinc-100"
           aria-expanded={showWhyRank}
         >
-          <HelpCircle className="w-3.5 h-3.5" />
+          <HelpCircle className="w-3.5 h-3.5 mr-1 text-zinc-500" />
           <span>{showWhyRank ? 'Hide Cost Breakdown' : 'Why this rank?'}</span>
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="inline-flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 font-medium focus-visible:ring-2 focus-visible:ring-primary-500 rounded p-1 min-h-touch"
+          className="h-7 px-2 text-xs text-zinc-400 hover:text-zinc-100"
           aria-expanded={isExpanded}
         >
           <span>{isExpanded ? 'Hide Segments' : 'View Segments'}</span>
-          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </button>
+          {isExpanded ? <ChevronUp className="w-3.5 h-3.5 ml-1" /> : <ChevronDown className="w-3.5 h-3.5 ml-1" />}
+        </Button>
       </div>
 
       {/* Expanded Sections */}
@@ -291,6 +269,6 @@ export const OptionCard: React.FC<OptionCardProps> = ({
           {isExpanded && <LegTimeline legs={option.legs} />}
         </div>
       )}
-    </article>
+    </Card>
   );
 };
