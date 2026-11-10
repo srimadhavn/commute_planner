@@ -5,6 +5,8 @@ import { SortPreset, sortTripOptions, calculateMetricExtremes } from '../../util
 import { formatSavingsHeadline } from '../../utils/formatters';
 import { OptionCard } from './OptionCard';
 import { TripMap } from '../map/TripMap';
+import { TripWeatherSection } from '../weather/TripWeatherSection';
+import { useTripWeather } from '../../hooks/useWeather';
 import { useToast } from '../../context/ToastContext';
 import { saveTrip } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
@@ -32,6 +34,12 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
   const [activeSort, setActiveSort] = useState<SortPreset>('best');
   const [activeView, setActiveView] = useState<'list' | 'map'>('list');
   const [localSavedIds, setLocalSavedIds] = useState<Set<string>>(savedTripIds);
+
+  const {
+    originQuery,
+    destinationQuery,
+    summary: weatherSummary,
+  } = useTripWeather(planData.origin, planData.destination);
 
   const sortedOptions = sortTripOptions(planData.options, activeSort);
   const extremes = calculateMetricExtremes(planData.options);
@@ -129,6 +137,19 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
         </CardContent>
       </Card>
 
+      {/* Origin & Destination Real-Time Weather Cards + Weather Recommendation */}
+      <TripWeatherSection
+        originLabel={planData.origin.label}
+        destinationLabel={planData.destination.label}
+        originWeather={originQuery.data}
+        originLoading={originQuery.isLoading}
+        originError={originQuery.isUnavailable}
+        destinationWeather={destinationQuery.data}
+        destinationLoading={destinationQuery.isLoading}
+        destinationError={destinationQuery.isUnavailable}
+        summary={weatherSummary}
+      />
+
       {/* Sorting Chips & View Toggle Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {/* Chips for Client-Side Re-sorting using shadcn Button */}
@@ -218,6 +239,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
               onSaveTrip={handleSaveTrip}
               isSaved={localSavedIds.has(option.id)}
               priority={priority}
+              weatherGuidance={weatherSummary.getOptionGuidance(option)}
             />
           ))}
         </div>

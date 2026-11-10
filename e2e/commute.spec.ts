@@ -3,6 +3,49 @@ import { SAMPLE_PLAN_RESPONSE, SAMPLE_SAVED_TRIPS } from '../src/services/sample
 
 const API_BASE = 'https://xemud1f2ug.execute-api.us-east-1.amazonaws.com';
 const COGNITO_URL = 'https://cognito-idp.us-east-1.amazonaws.com/';
+const OPEN_METEO_URL = 'https://api.open-meteo.com/v1/forecast*';
+
+function makeOpenMeteoJson(overrides?: {
+  temp?: number;
+  feels?: number;
+  humidity?: number;
+  precip?: number;
+  rain?: number;
+  code?: number;
+  wind?: number;
+  hourlyPrecip?: number[];
+  hourlyProb?: number[];
+  hourlyCodes?: number[];
+}) {
+  return {
+    latitude: 40.76,
+    longitude: -73.98,
+    timezone: 'America/New_York',
+    timezone_abbreviation: 'GMT-5',
+    current: {
+      time: '2026-11-10T10:00',
+      interval: 900,
+      temperature_2m: overrides?.temp ?? 12.4,
+      relative_humidity_2m: overrides?.humidity ?? 58,
+      apparent_temperature: overrides?.feels ?? 10.1,
+      precipitation: overrides?.precip ?? 0.0,
+      rain: overrides?.rain ?? 0.0,
+      weather_code: overrides?.code ?? 1,
+      wind_speed_10m: overrides?.wind ?? 11.2,
+    },
+    hourly: {
+      time: [
+        '2026-11-10T10:00',
+        '2026-11-10T11:00',
+        '2026-11-10T12:00',
+        '2026-11-10T13:00',
+      ],
+      precipitation: overrides?.hourlyPrecip ?? [0.0, 0.0, 0.0, 0.0],
+      precipitation_probability: overrides?.hourlyProb ?? [5, 10, 10, 5],
+      weather_code: overrides?.hourlyCodes ?? [1, 1, 2, 2],
+    },
+  };
+}
 
 test.describe('Commute Planner E2E Test Suite', () => {
   test.beforeEach(async ({ page }) => {
@@ -123,6 +166,24 @@ test.describe('Commute Planner E2E Test Suite', () => {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify(SAMPLE_SAVED_TRIPS),
+      });
+    });
+
+    // Default Open-Meteo Weather Route Mock
+    await page.route(OPEN_METEO_URL, async (route) => {
+      const url = route.request().url();
+      if (url.includes('40.758')) {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(makeOpenMeteoJson({ temp: 12.4, feels: 10.1, wind: 11.2, code: 1 })),
+        });
+        return;
+      }
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(makeOpenMeteoJson({ temp: 13.0, feels: 11.2, wind: 9.8, code: 2 })),
       });
     });
   });
@@ -272,5 +333,87 @@ test.describe('Commute Planner E2E Test Suite', () => {
     await expect(page.getByRole('heading', { name: /methodology & visible assumptions/i })).toBeVisible();
     await expect(page.getByText(/carbon emissions \(us epa averages\)/i)).toBeVisible();
     await expect(page.getByText(/destination parking & fare costs/i)).toBeVisible();
+  });
+
+  test('6. Open-Meteo origin & destination weather cards, attribution, and graceful API failure', async ({ page }) => {
+    await page.goto('/');
+
+    // Enter Demo Mode & Plan Trip
+    await page.getByRole('button', { name: /sign in/i }).first().click();
+    await page.getByRole('button', { name: /explore with sample data/i }).click();
+    await page.getByRole('button', { name: /compare commutes/i }).click();
+
+    await page.waitForSelector('article');
+
+    // Origin & Destination WeatherCards are visible
+    const originCard = page.getByTestId('weather-card-origin');
+    const destCard = page.getByTestId('weather-card-destination');
+    await expect(originCard).toBeVisible();
+    await expect(destCard).toBeVisible();
+    await expect(originCard).toContainText('12.4°C');
+    await expect(destCard).toContainText('13.0°C');
+
+    // Verify Attribution Link
+    const attributionLink = page.getByRole('link', { name: /weather data by open-meteo/i });
+    await expect(attributionLink).toHaveAttribute('href', 'https://open-meteo.com/');
+
+    // Verify failure fallback does NOT break trip planning or results (reload resets 10-min cache cleanly)
+    await page.route(OPEN_METEO_URL, async (route) => {
+      await route.fulfill({ status: 500, body: 'Server Error' });
+    });
+
+    await page.goto('/');
+    await page.getByRole('button', { name: /sign in/i }).first().click();
+    await page.getByRole('button', { name: /explore with sample data/i }).click();
+    await page.getByRole('button', { name: /compare commutes/i }).click();
+
+    await page.waitForSelector('article');
+    await expect(page.getByText(/weather temporarily unavailable/i).first()).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('article')).toHaveCount(5);
+  });
+
+  test('7. Weather-aware transit recommendations distinguish current vs forecast and preserve options & Best Overall', async ({ page }) => {
+    // Dry currently, moderate rain in upcoming hourly forecast
+    await page.route(OPEN_METEO_URL, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(
+          makeOpenMeteoJson({
+            temp: 10.5,
+            feels: 8.2,
+            precip: 0.0,
+            rain: 0.0,
+            code: 2,
+            hourlyPrecip: [0.0, 3.5, 4.2, 1.0],
+            hourlyProb: [15, 85, 90, 40],
+            hourlyCodes: [2, 63, 63, 61],
+          })
+        ),
+      });
+    });
+
+    await page.goto('/');
+    await page.getByRole('button', { name: /sign in/i }).first().click();
+    await page.getByRole('button', { name: /explore with sample data/i }).click();
+    await page.getByRole('button', { name: /compare commutes/i }).click();
+
+    await page.waitForSelector('article');
+
+    const banner = page.getByTestId('weather-recommendation-banner');
+    await expect(banner).toBeVisible();
+    await expect(banner).toContainText(/weather recommendation/i);
+    await expect(banner).toContainText(/hourly forecast/i);
+    await expect(banner).toContainText(/current conditions are dry/i);
+    await expect(banner).toContainText(/public transport suggested/i);
+
+    // All 5 transport options remain visible
+    await expect(page.locator('article')).toHaveCount(5);
+
+    // Separate recommendations shown on Subway, Citi Bike, and Walking while preserving Best Overall
+    await expect(page.getByTestId('weather-guidance-option-subway-1')).toContainText(/suggested for rain/i);
+    await expect(page.getByTestId('weather-guidance-option-bike-1')).toContainText(/caution/i);
+    await expect(page.getByTestId('weather-guidance-option-walk-1')).toContainText(/caution/i);
+    await expect(page.locator('article').nth(1)).toContainText(/best overall/i);
   });
 });

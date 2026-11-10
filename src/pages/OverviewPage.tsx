@@ -15,7 +15,6 @@ import {
   RotateCw,
   Sparkles,
   BarChart3,
-  ShieldCheck,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -144,9 +143,9 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ onRequireAuth }) => 
   };
 
   return (
-    <div className="space-y-12 animate-fadeIn">
+    <div className="space-y-8 sm:space-y-10 animate-fadeIn">
       {/* 1. Vercel-Style Hero Section */}
-      <section className="pt-4 sm:pt-8 pb-4 text-center space-y-5 max-w-4xl mx-auto">
+      <section className="pt-2 sm:pt-6 pb-2 text-center space-y-4 max-w-4xl mx-auto">
         {/* Pill Badge */}
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono text-zinc-300 shadow-sm">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -154,42 +153,42 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ onRequireAuth }) => 
         </div>
 
         {/* Hero Title */}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-zinc-100 leading-tight">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-100 leading-tight">
           Compare Every Way to Commute in NYC
         </h1>
 
         {/* Hero Subtitle */}
-        <p className="text-sm sm:text-base md:text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-xs sm:text-sm md:text-base text-zinc-400 max-w-2xl mx-auto leading-relaxed">
           Side-by-side time, cost, and carbon emissions for subway, bus, bike-share, and driving — powered by live Citi Bike dock availability.
         </p>
 
         {/* Hero CTAs */}
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">
           <Button
-            size="lg"
+            size="sm"
             onClick={scrollToEngine}
-            className="h-10 px-5 text-sm font-semibold bg-zinc-100 text-zinc-950 hover:bg-zinc-200 shadow-md"
+            className="h-9 px-4 text-xs sm:text-sm font-semibold bg-zinc-100 text-zinc-950 hover:bg-zinc-200 shadow-md"
           >
-            <Compass className="w-4 h-4 mr-2" />
+            <Compass className="w-4 h-4 mr-1.5" />
             <span>Compare Routes</span>
           </Button>
 
           <Button
             variant="outline"
-            size="lg"
+            size="sm"
             onClick={() => navigate('/stations')}
-            className="h-10 px-5 text-sm border-zinc-800 bg-zinc-900/90 text-zinc-200 hover:bg-zinc-800"
+            className="h-9 px-4 text-xs sm:text-sm border-zinc-800 bg-zinc-900/90 text-zinc-200 hover:bg-zinc-800"
           >
-            <Radio className="w-4 h-4 mr-2 text-emerald-400" />
+            <Radio className="w-4 h-4 mr-1.5 text-emerald-400" />
             <span>Explore Stations</span>
           </Button>
 
           {!isAuthenticated && !isDemoMode && (
             <Button
               variant="ghost"
-              size="lg"
+              size="sm"
               onClick={handleExploreSample}
-              className="h-10 px-4 text-sm text-zinc-400 hover:text-zinc-100"
+              className="h-9 px-3 text-xs text-zinc-400 hover:text-zinc-100"
             >
               <span>Instant Demo</span>
             </Button>
@@ -197,31 +196,31 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ onRequireAuth }) => 
         </div>
 
         {/* Live Metrics Strip (4 Clean Stat Counters) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6 border-t border-zinc-800/80 text-left">
-          <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-zinc-900/60">
-            <span className="text-xs font-mono text-zinc-400 block">GBFS Stations</span>
-            <span className="text-xl sm:text-2xl font-bold font-mono tabular-nums text-zinc-100 mt-0.5 block">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 pt-4 border-t border-zinc-800/80 text-left">
+          <div className="p-3 rounded-xl border border-zinc-800/80 bg-zinc-900/60">
+            <span className="text-[11px] font-mono text-zinc-400 block">GBFS Stations</span>
+            <span className="text-lg sm:text-xl md:text-2xl font-bold font-mono tabular-nums text-zinc-100 mt-0.5 block">
               {SAMPLE_SYSTEM_TELEMETRY.gbfs_stations_count.toLocaleString()}
             </span>
           </div>
 
-          <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-zinc-900/60">
-            <span className="text-xs font-mono text-zinc-400 block">Active Citi Bikes</span>
-            <span className="text-xl sm:text-2xl font-bold font-mono tabular-nums text-zinc-100 mt-0.5 block">
+          <div className="p-3 rounded-xl border border-zinc-800/80 bg-zinc-900/60">
+            <span className="text-[11px] font-mono text-zinc-400 block">Active Citi Bikes</span>
+            <span className="text-lg sm:text-xl md:text-2xl font-bold font-mono tabular-nums text-zinc-100 mt-0.5 block">
               {SAMPLE_SYSTEM_TELEMETRY.active_bikes.toLocaleString()}
             </span>
           </div>
 
-          <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-zinc-900/60">
-            <span className="text-xs font-mono text-zinc-400 block">EPA Baseline</span>
-            <span className="text-xl sm:text-2xl font-bold font-mono tabular-nums text-zinc-100 mt-0.5 block">
+          <div className="p-3 rounded-xl border border-zinc-800/80 bg-zinc-900/60">
+            <span className="text-[11px] font-mono text-zinc-400 block">EPA Baseline</span>
+            <span className="text-lg sm:text-xl md:text-2xl font-bold font-mono tabular-nums text-zinc-100 mt-0.5 block">
               400g / mi
             </span>
           </div>
 
-          <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-zinc-900/60">
-            <span className="text-xs font-mono text-zinc-400 block">Feed Latency</span>
-            <span className="text-xl sm:text-2xl font-bold font-mono tabular-nums text-emerald-400 mt-0.5 block">
+          <div className="p-3 rounded-xl border border-zinc-800/80 bg-zinc-900/60">
+            <span className="text-[11px] font-mono text-zinc-400 block">Feed Latency</span>
+            <span className="text-lg sm:text-xl md:text-2xl font-bold font-mono tabular-nums text-emerald-400 mt-0.5 block">
               {SAMPLE_SYSTEM_TELEMETRY.sync_latency_ms} ms
             </span>
           </div>
@@ -419,36 +418,42 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ onRequireAuth }) => 
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="border-zinc-800 bg-zinc-900/60 p-5 space-y-2.5">
-            <div className="w-8 h-8 rounded-lg bg-zinc-950 border border-zinc-800 flex items-center justify-center text-emerald-400">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-zinc-900/40 flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-800 text-emerald-400 shrink-0">
               <Radio className="w-4 h-4" />
             </div>
-            <h3 className="font-semibold text-sm text-zinc-100">Live GBFS Feeds</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              Real-time Citi Bike dock and e-bike inventory ingested directly across 2,520 stations in Manhattan and Brooklyn.
-            </p>
-          </Card>
+            <div>
+              <h3 className="font-semibold text-xs sm:text-sm text-zinc-100">Live GBFS Feeds</h3>
+              <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">
+                2,520 Citi Bike docks monitored with live electric and classic inventory.
+              </p>
+            </div>
+          </div>
 
-          <Card className="border-zinc-800 bg-zinc-900/60 p-5 space-y-2.5">
-            <div className="w-8 h-8 rounded-lg bg-zinc-950 border border-zinc-800 flex items-center justify-center text-blue-400">
+          <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-zinc-900/40 flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-800 text-blue-400 shrink-0">
               <Sparkles className="w-4 h-4" />
             </div>
-            <h3 className="font-semibold text-sm text-zinc-100">Composite Economic Scoring</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              Balances out-of-pocket fares, destination parking rates, travel time value, and the social cost of carbon.
-            </p>
-          </Card>
+            <div>
+              <h3 className="font-semibold text-xs sm:text-sm text-zinc-100">Economic Arbitrage</h3>
+              <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">
+                Ranks out-of-pocket fares, destination parking, travel time, and social carbon cost.
+              </p>
+            </div>
+          </div>
 
-          <Card className="border-zinc-800 bg-zinc-900/60 p-5 space-y-2.5">
-            <div className="w-8 h-8 rounded-lg bg-zinc-950 border border-zinc-800 flex items-center justify-center text-zinc-200">
+          <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-zinc-900/40 flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-200 shrink-0">
               <BarChart3 className="w-4 h-4" />
             </div>
-            <h3 className="font-semibold text-sm text-zinc-100">Personal Carbon Ledger</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              Log your daily commutes, track cumulative dollars and CO₂ avoided, and export audit-ready CSV logs anytime.
-            </p>
-          </Card>
+            <div>
+              <h3 className="font-semibold text-xs sm:text-sm text-zinc-100">Carbon Ledger</h3>
+              <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">
+                Log daily commutes and download verified emissions logs via 1-click CSV export.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -508,51 +513,6 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ onRequireAuth }) => 
             ))}
           </div>
         </Card>
-      </section>
-
-      {/* 5. Clean Bottom Portal Shortcuts */}
-      <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-zinc-800">
-        <Link
-          to="/plan"
-          className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/40 hover:bg-zinc-900 hover:border-zinc-700 transition-all group flex items-center justify-between"
-        >
-          <div className="flex items-center gap-3">
-            <Compass className="w-5 h-5 text-zinc-400 group-hover:text-zinc-100" />
-            <div>
-              <h3 className="font-bold text-sm text-zinc-100">Route Comparison</h3>
-              <span className="text-xs text-zinc-400">Evaluate transit alternatives</span>
-            </div>
-          </div>
-          <ArrowRight className="w-4 h-4 text-zinc-500 transition-transform group-hover:translate-x-1" />
-        </Link>
-
-        <Link
-          to="/stations"
-          className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/40 hover:bg-zinc-900 hover:border-zinc-700 transition-all group flex items-center justify-between"
-        >
-          <div className="flex items-center gap-3">
-            <Radio className="w-5 h-5 text-emerald-400" />
-            <div>
-              <h3 className="font-bold text-sm text-zinc-100">Live Stations Grid</h3>
-              <span className="text-xs text-zinc-400">2,520 real-time docks</span>
-            </div>
-          </div>
-          <ArrowRight className="w-4 h-4 text-zinc-500 transition-transform group-hover:translate-x-1" />
-        </Link>
-
-        <Link
-          to="/methodology"
-          className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/40 hover:bg-zinc-900 hover:border-zinc-700 transition-all group flex items-center justify-between"
-        >
-          <div className="flex items-center gap-3">
-            <ShieldCheck className="w-5 h-5 text-blue-400" />
-            <div>
-              <h3 className="font-bold text-sm text-zinc-100">Methodology</h3>
-              <span className="text-xs text-zinc-400">EPA emission standards</span>
-            </div>
-          </div>
-          <ArrowRight className="w-4 h-4 text-zinc-500 transition-transform group-hover:translate-x-1" />
-        </Link>
       </section>
     </div>
   );

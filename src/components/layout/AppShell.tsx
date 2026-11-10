@@ -132,11 +132,17 @@ export const AppShell: React.FC<AppShellProps> = ({ onOpenSignIn, children }) =>
                   aria-hidden="true"
                 />
                 <span className="tabular-nums font-mono text-[11px]">
-                  {health?.status === 'ok'
-                    ? `Live: ${health.station_count.toLocaleString()} (${health.age_seconds}s)`
-                    : isStale
-                    ? 'Feed Stale'
-                    : 'Connecting...'}
+                  {health?.status === 'ok' ? (
+                    <>
+                      <span className="hidden sm:inline">Live: </span>
+                      {health.station_count.toLocaleString()}
+                      <span className="hidden sm:inline"> ({health.age_seconds}s)</span>
+                    </>
+                  ) : isStale ? (
+                    'Feed Stale'
+                  ) : (
+                    'Connecting...'
+                  )}
                 </span>
               </div>
 
@@ -212,8 +218,8 @@ export const AppShell: React.FC<AppShellProps> = ({ onOpenSignIn, children }) =>
           </div>
         </div>
 
-        {/* Sub-Navigation Bar: Vercel Horizontal Tabs with Active Bottom Border */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Sub-Navigation Bar: Vercel Horizontal Tabs with Active Bottom Border (Desktop & Tablet) */}
+        <div className="hidden md:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex items-center gap-1 sm:gap-2 -mb-px overflow-x-auto scrollbar-none" aria-label="Project Sub Navigation">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -242,13 +248,13 @@ export const AppShell: React.FC<AppShellProps> = ({ onOpenSignIn, children }) =>
       </header>
 
       {/* Main Content Area Landmark */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-12 bg-dot-grid" id="main-content">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 pb-20 md:pb-10 bg-dot-grid" id="main-content">
         {children}
       </main>
 
-      {/* Mobile Bottom Navigation Bar */}
+      {/* Mobile Bottom Navigation Bar (Single Clean Navigation for Mobile) */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 backdrop-blur border-t border-zinc-800 flex justify-around items-center h-14 px-2"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 backdrop-blur-md border-t border-zinc-800/80 flex justify-around items-center h-14 px-2"
         aria-label="Mobile Navigation"
       >
         {navItems.map((item) => {
@@ -258,6 +264,7 @@ export const AppShell: React.FC<AppShellProps> = ({ onOpenSignIn, children }) =>
               key={item.to}
               to={item.to}
               role="button"
+              aria-label={item.label}
               end={item.to === '/'}
               className={({ isActive }) =>
                 cn(

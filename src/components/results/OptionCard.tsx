@@ -14,8 +14,12 @@ import {
   Bike,
   Car,
   TrendingDown,
+  CloudRain,
+  AlertTriangle,
+  ShieldAlert,
 } from 'lucide-react';
 import { TripOption, OptionTag } from '../../types/api';
+import { ModeWeatherGuidance } from '../../types/weather';
 import {
   formatCurrency,
   formatTime,
@@ -24,6 +28,7 @@ import {
   formatTimeDiff,
 } from '../../utils/formatters';
 import { Badge } from '../common/Badge';
+import { Badge as ShadcnBadge } from '../ui/badge';
 import { Card } from '../ui/card';
 import { Button } from '../ui/button';
 import { Progress } from '../ui/progress';
@@ -38,6 +43,7 @@ interface OptionCardProps {
   onSaveTrip: (option: TripOption) => Promise<boolean>;
   isSaved?: boolean;
   priority?: string;
+  weatherGuidance?: ModeWeatherGuidance | null;
 }
 
 export const OptionCard: React.FC<OptionCardProps> = ({
@@ -47,6 +53,7 @@ export const OptionCard: React.FC<OptionCardProps> = ({
   onSaveTrip,
   isSaved = false,
   priority = 'balanced',
+  weatherGuidance = null,
 }) => {
   const [isExpanded, setIsExpanded] = useState(rankIndex === 0);
   const [showWhyRank, setShowWhyRank] = useState(false);
@@ -226,6 +233,55 @@ export const OptionCard: React.FC<OptionCardProps> = ({
             />
           </div>
         </div>
+
+        {/* Separate Weather Recommendation Indicator (never mutates backend score or best_overall tags) */}
+        {weatherGuidance && (
+          <div
+            data-testid={`weather-guidance-${option.id}`}
+            aria-label="Weather recommendation"
+            className={cn(
+              'mt-4 p-2.5 sm:p-3 rounded-md border text-xs flex items-start gap-2.5',
+              weatherGuidance.level === 'discouraged'
+                ? 'border-rose-800/70 bg-rose-950/25 text-rose-200'
+                : weatherGuidance.level === 'caution'
+                ? 'border-amber-800/60 bg-amber-950/20 text-amber-200'
+                : 'border-sky-800/60 bg-sky-950/20 text-sky-200'
+            )}
+          >
+            <div className="mt-0.5 shrink-0">
+              {weatherGuidance.level === 'discouraged' ? (
+                <ShieldAlert className="w-4 h-4 text-rose-400" aria-hidden="true" />
+              ) : weatherGuidance.level === 'caution' ? (
+                <AlertTriangle className="w-4 h-4 text-amber-400" aria-hidden="true" />
+              ) : (
+                <CloudRain className="w-4 h-4 text-sky-400" aria-hidden="true" />
+              )}
+            </div>
+            <div className="space-y-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+                  Weather recommendation:
+                </span>
+                <ShadcnBadge
+                  variant="outline"
+                  className={cn(
+                    'text-[11px] font-semibold px-1.5 py-0',
+                    weatherGuidance.level === 'discouraged'
+                      ? 'border-rose-700/80 bg-rose-950/60 text-rose-200'
+                      : weatherGuidance.level === 'caution'
+                      ? 'border-amber-700/80 bg-amber-950/60 text-amber-200'
+                      : 'border-sky-700/80 bg-sky-950/60 text-sky-200'
+                  )}
+                >
+                  {weatherGuidance.badgeLabel}
+                </ShadcnBadge>
+              </div>
+              <p className="text-[11px] text-zinc-300 leading-relaxed">
+                {weatherGuidance.reason}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Expandable Footer Controls */}

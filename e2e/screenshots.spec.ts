@@ -97,6 +97,44 @@ test.describe('Screenshots Capture Suite', () => {
         body: JSON.stringify(SAMPLE_SAVED_TRIPS),
       });
     });
+
+    // Open-Meteo Weather Mock for deterministic screenshot captures
+    await page.route('https://api.open-meteo.com/v1/forecast*', async (route) => {
+      const url = route.request().url();
+      const isOrigin = url.includes('40.758');
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          latitude: isOrigin ? 40.76 : 40.75,
+          longitude: isOrigin ? -73.98 : -73.97,
+          timezone: 'America/New_York',
+          timezone_abbreviation: 'GMT-5',
+          current: {
+            time: '2026-11-10T09:00',
+            interval: 900,
+            temperature_2m: isOrigin ? 11.4 : 11.9,
+            relative_humidity_2m: isOrigin ? 78 : 74,
+            apparent_temperature: isOrigin ? 9.1 : 9.8,
+            precipitation: isOrigin ? 0.6 : 0.0,
+            rain: isOrigin ? 0.6 : 0.0,
+            weather_code: isOrigin ? 61 : 3,
+            wind_speed_10m: isOrigin ? 14.2 : 12.6,
+          },
+          hourly: {
+            time: [
+              '2026-11-10T09:00',
+              '2026-11-10T10:00',
+              '2026-11-10T11:00',
+              '2026-11-10T12:00',
+            ],
+            precipitation: isOrigin ? [0.6, 2.8, 3.4, 0.8] : [0.0, 2.6, 3.1, 0.4],
+            precipitation_probability: isOrigin ? [70, 85, 80, 45] : [45, 80, 75, 35],
+            weather_code: isOrigin ? [61, 63, 63, 61] : [3, 63, 63, 80],
+          },
+        }),
+      });
+    });
   });
 
   test('Capture every screen at viewport', async ({ page }, testInfo) => {

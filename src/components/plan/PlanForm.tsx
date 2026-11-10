@@ -229,8 +229,8 @@ export const PlanForm: React.FC<PlanFormProps> = ({
           {/* Recent Places Chips */}
           {savedRecentPlaces && savedRecentPlaces.length > 0 && (
             <div>
-              <span className="block text-xs text-zinc-500 mb-1.5">Recent places:</span>
-              <div className="flex flex-wrap gap-1.5" role="group" aria-label="Recent locations">
+              <span className="block text-xs text-zinc-500 mb-1.5 font-medium">Recent places:</span>
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none" role="group" aria-label="Recent locations">
                 {savedRecentPlaces.slice(0, 4).map((place) => (
                   <Button
                     key={place}
@@ -238,7 +238,7 @@ export const PlanForm: React.FC<PlanFormProps> = ({
                     variant="outline"
                     size="sm"
                     onClick={() => handleRecentPlaceClick(place, 'destination')}
-                    className="h-7 text-xs border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800"
+                    className="h-7 text-xs border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 whitespace-nowrap shrink-0"
                   >
                     {place}
                   </Button>
